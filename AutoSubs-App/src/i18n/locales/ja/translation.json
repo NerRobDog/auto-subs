@@ -100,23 +100,36 @@
     "title": "言語を選択"
   },
   "modelStatus": {
-    "available": "未ダウンロード",
+    "available": "ダウンロード可能",
     "cached": "ダウンロード済み",
     "ram": "RAM：",
-    "storage": "ストレージ："
+    "storage": "ストレージ：",
+    "accuracy": "精度",
+    "lightweight": "軽量",
+    "downloadProgress": "{{progress}}%"
   },
   "models": {
+    "searchPlaceholder": "モデルを検索...",
+    "noResults": "モデルが見つかりません。",
+    "filteredByLanguage": "選択された言語でモデルをフィルター",
+    "filters": {
+      "weight": "軽量",
+      "accuracy": "精度", 
+      "recommended": "おすすめ",
+      "search": "検索",
+      "clear": "フィルターをクリア"
+    },
     "base": {
       "badge": "多言語",
       "description": "高速",
       "details": "低メモリで信頼性の高い文字起こし。日常使用に最適。",
-      "label": "Base"
+      "label": "Whisper 基本版"
     },
     "base_en": {
       "badge": "英語専用",
       "description": "高速",
       "details": "低メモリで信頼性の高い英語文字起こし。日常使用に最適。",
-      "label": "Base（英語）"
+      "label": "Whisper 基本版"
     },
     "englishOnly": {
       "description": "英語文字起こしの精度が高い英語専用モデルを表示。",
@@ -126,13 +139,13 @@
       "badge": "多言語",
       "description": "最高精度",
       "details": "複雑な音声に対して最高の精度を発揮しますが、低速で大量のメモリが必要です。",
-      "label": "Large"
+      "label": "Whisper 大型版"
     },
     "large_v3_turbo": {
       "badge": "多言語",
       "description": "高速・高精度",
       "details": "Largeモデルより高速で優れた精度、適度なメモリ使用量。",
-      "label": "Large Turbo"
+      "label": "Whisper 大型版 ターボ"
     },
     "manage": {
       "confirmBody": "{{model}} モデルをデバイスから削除します。今後このモデルを使用する場合は再ダウンロードが必要です。",
@@ -146,67 +159,67 @@
       "badge": "英語専用",
       "description": "高速・高精度",
       "details": "Moonshine Tinyより高精度な高速オンデバイス英語文字起こし。",
-      "label": "Moonshine Base"
+      "label": "Moonshine 基本版"
     },
     "moonshine_base_es": {
       "badge": "スペイン語",
       "description": "高速・高精度",
       "details": "高精度な高速オンデバイススペイン語文字起こし。",
-      "label": "Moonshine Base（スペイン語）"
+      "label": "Moonshine 基本版"
     },
     "moonshine_tiny": {
       "badge": "英語専用",
       "description": "超高速",
       "details": "最小リソースで超高速のオンデバイス英語文字起こし。リアルタイム使用に最適。",
-      "label": "Moonshine Tiny"
+      "label": "Moonshine 超小型版"
     },
     "moonshine_tiny_ar": {
       "badge": "アラビア語",
       "description": "超高速",
       "details": "最小リソースで高速なオンデバイスアラビア語文字起こし。",
-      "label": "Moonshine Tiny（アラビア語）"
+      "label": "Moonshine 超小型版"
     },
     "moonshine_tiny_ja": {
       "badge": "日本語",
       "description": "超高速",
       "details": "最小リソースで高速なオンデバイス日本語文字起こし。",
-      "label": "Moonshine Tiny（日本語）"
+      "label": "Moonshine 超小型版"
     },
     "moonshine_tiny_ko": {
       "badge": "韓国語",
       "description": "超高速",
       "details": "最小リソースで高速なオンデバイス韓国語文字起こし。",
-      "label": "Moonshine Tiny（韓国語）"
+      "label": "Moonshine 超小型版"
     },
     "moonshine_tiny_uk": {
       "badge": "ウクライナ語",
       "description": "超高速",
       "details": "最小リソースで高速なオンデバイスウクライナ語文字起こし。",
-      "label": "Moonshine Tiny（ウクライナ語）"
+      "label": "Moonshine 超小型版"
     },
     "moonshine_tiny_vi": {
       "badge": "ベトナム語",
       "description": "超高速",
       "details": "最小リソースで高速なオンデバイスベトナム語文字起こし。",
-      "label": "Moonshine Tiny（ベトナム語）"
+      "label": "Moonshine 超小型版"
     },
     "moonshine_tiny_zh": {
       "badge": "中国語",
       "description": "超高速",
       "details": "最小リソースで高速なオンデバイス中国語文字起こし。",
-      "label": "Moonshine Tiny（中国語）"
+      "label": "Moonshine 超小型版"
     },
     "medium": {
       "badge": "多言語",
       "description": "高精度",
       "details": "適度な速度とメモリで高精度な文字起こし。難しい音声に適しています。",
-      "label": "Medium"
+      "label": "Whisper 中型版"
     },
     "medium_en": {
       "badge": "英語専用",
       "description": "高精度",
       "details": "適度な速度で高精度な英語文字起こし。難しい音声に適しています。",
-      "label": "Medium（英語）"
+      "label": "Whisper 中型版"
     },
     "parakeet": {
       "badge": "ヨーロッパ語",
@@ -218,25 +231,25 @@
       "badge": "多言語",
       "description": "バランス型",
       "details": "適度なメモリでスピードと精度のバランスが良い。様々なアクセントに対応。",
-      "label": "Small"
+      "label": "Whisper 小型版"
     },
     "small_en": {
       "badge": "英語専用",
       "description": "バランス型",
       "details": "適度なメモリでスピードと英語精度のバランスが良い。様々なアクセントに対応。",
-      "label": "Small（英語）"
+      "label": "Whisper 小型版"
     },
     "tiny": {
       "badge": "多言語",
       "description": "超高速",
       "details": "最小メモリで最速の文字起こし。クイックドラフトに最適。",
-      "label": "Tiny"
+      "label": "Whisper 超小型版"
     },
     "tiny_en": {
       "badge": "英語専用",
       "description": "超高速",
       "details": "最小メモリで最速の英語文字起こし。クイックドラフトに最適。",
-      "label": "Tiny（英語）"
+      "label": "Whisper 超小型版"
     }
   },
   "progressSteps": {

@@ -5,6 +5,60 @@ import { Model } from "@/types/interfaces";
  * These model definitions are used throughout the application
  * to ensure consistency in model information display
  */
+
+/**
+ * Predefined filter orders for models
+ * Each array defines the optimal order for that filter type
+ */
+export const modelFilterOrders = {
+  weight: [
+    "moonshine-tiny", "tiny", "tiny.en", "base", "base.en", 
+    "moonshine-tiny-ar", "moonshine-tiny-zh", "moonshine-tiny-ja", 
+    "moonshine-tiny-ko", "moonshine-tiny-uk", "moonshine-tiny-vi", 
+    "moonshine-base", "moonshine-base-es", "small.en", "small", 
+    "large-v3-turbo", "parakeet", "medium", "medium.en", "large-v3"
+  ],
+  accuracy: [
+    "large-v3", "large-v3-turbo", "parakeet", "medium.en", "medium",
+    "moonshine-base", "small.en", "small", "moonshine-tiny-ar", "moonshine-tiny-zh", 
+    "moonshine-tiny-ja", "moonshine-tiny-ko", "moonshine-tiny-uk", 
+    "moonshine-tiny-vi", "moonshine-base-es",
+    "tiny", "tiny.en", "base", "base.en", "moonshine-tiny"
+  ],
+  recommended: [
+    "parakeet", "large-v3-turbo", "large-v3", "moonshine-tiny-ar", "moonshine-tiny-zh", "moonshine-tiny-ja", 
+    "moonshine-tiny-ko", "moonshine-tiny-uk", "moonshine-tiny-vi", "moonshine-base", "moonshine-base-es", "small.en", "small",
+    "medium", "medium.en",
+    "tiny", "tiny.en", "base", "base.en", "moonshine-tiny"
+  ]
+};
+
+/**
+ * Language-specific model orders for recommended filter
+ * Only defined for languages that have specific models worth highlighting
+ */
+export const languageSpecificOrders = {
+  en: [
+    "parakeet", "large-v3-turbo", "small.en", "small", "tiny.en", 
+    "medium.en", "base.en", "large-v3", "medium", "tiny", "base",
+    "moonshine-base", "moonshine-base-es", "moonshine-tiny-ar", "moonshine-tiny-zh", 
+    "moonshine-tiny-ja", "moonshine-tiny-ko", "moonshine-tiny-uk", 
+    "moonshine-tiny-vi", "moonshine-tiny"
+  ],
+  ja: [
+    "parakeet", "large-v3-turbo", "moonshine-tiny-ja", "small", "small.en",
+    "large-v3", "medium", "medium.en", "tiny", "tiny.en", "base", "base.en",
+    "moonshine-tiny-ar", "moonshine-tiny-zh", "moonshine-tiny-ko", "moonshine-tiny-uk", 
+    "moonshine-tiny-vi", "moonshine-base", "moonshine-base-es", "moonshine-tiny"
+  ],
+  es: [
+    "parakeet", "large-v3-turbo", "moonshine-base-es", "small", "small.en",
+    "large-v3", "medium", "medium.en", "tiny", "tiny.en", "base", "base.en",
+    "moonshine-tiny-ar", "moonshine-tiny-zh", "moonshine-tiny-ja", "moonshine-tiny-ko", 
+    "moonshine-tiny-uk", "moonshine-tiny-vi", "moonshine-base", "moonshine-tiny"
+  ]
+};
+
 export const models: Model[] = [
   {
     value: "parakeet",
@@ -189,7 +243,7 @@ export const models: Model[] = [
     details: "models.moonshine_tiny_ar.details",
     badge: "models.moonshine_tiny_ar.badge",
     languageSupport: { kind: "single_language", language: "ar" },
-    accuracy: 1,
+    accuracy: 3,
     weight: 3,
     isDownloaded: false,
   },
@@ -203,7 +257,7 @@ export const models: Model[] = [
     details: "models.moonshine_tiny_zh.details",
     badge: "models.moonshine_tiny_zh.badge",
     languageSupport: { kind: "single_language", language: "zh" },
-    accuracy: 1,
+    accuracy: 3,
     weight: 3,
     isDownloaded: false,
   },
@@ -217,7 +271,7 @@ export const models: Model[] = [
     details: "models.moonshine_tiny_ja.details",
     badge: "models.moonshine_tiny_ja.badge",
     languageSupport: { kind: "single_language", language: "ja" },
-    accuracy: 1,
+    accuracy: 3,
     weight: 3,
     isDownloaded: false,
   },
@@ -231,7 +285,7 @@ export const models: Model[] = [
     details: "models.moonshine_tiny_ko.details",
     badge: "models.moonshine_tiny_ko.badge",
     languageSupport: { kind: "single_language", language: "ko" },
-    accuracy: 1,
+    accuracy: 3,
     weight: 3,
     isDownloaded: false,
   },
@@ -245,7 +299,7 @@ export const models: Model[] = [
     details: "models.moonshine_tiny_uk.details",
     badge: "models.moonshine_tiny_uk.badge",
     languageSupport: { kind: "single_language", language: "uk" },
-    accuracy: 1,
+    accuracy: 2,
     weight: 3,
     isDownloaded: false,
   },
@@ -259,7 +313,7 @@ export const models: Model[] = [
     details: "models.moonshine_tiny_vi.details",
     badge: "models.moonshine_tiny_vi.badge",
     languageSupport: { kind: "single_language", language: "vi" },
-    accuracy: 1,
+    accuracy: 3,
     weight: 3,
     isDownloaded: false,
   },

@@ -152,9 +152,14 @@
     "cached": "Im Cache",
     "available": "Verfügbar",
     "storage": "Speicher:",
-    "ram": "RAM:"
+    "ram": "RAM:",
+    "accuracy": "Genauigkeit",
+    "lightweight": "Leichtgewicht"
   },
   "models": {
+    "searchPlaceholder": "Modelle suchen...",
+    "noResults": "Keine Modelle gefunden.",
+    "filteredByLanguage": "Modelle nach ausgewählter Sprache gefiltert",
     "englishOnly": {
       "title": "Nur-Englisch-Modelle",
       "description": "Spezialisierte englische Modelle mit höherer Genauigkeit anzeigen."
@@ -168,61 +173,61 @@
       "confirmBody": "Dadurch wird das Modell {{model}} von deinem Gerät gelöscht. Wenn du es später verwendest, muss es erneut heruntergeladen werden."
     },
     "tiny": {
-      "label": "Tiny",
+      "label": "Whisper Tiny",
       "description": "Ultraschnell",
       "details": "Schnellste Transkription mit minimalem Speicherbedarf. Ideal für schnelle Entwürfe.",
       "badge": "Mehrsprachig"
     },
     "tiny_en": {
-      "label": "Tiny",
+      "label": "Whisper Tiny",
       "description": "Ultraschnell",
       "details": "Schnellste englische Transkription mit minimalem Speicherbedarf. Ideal für Entwürfe.",
       "badge": "Nur Englisch"
     },
     "base": {
-      "label": "Base",
+      "label": "Whisper Base",
       "description": "Schnell",
       "details": "Zuverlässige Transkription mit geringem Speicherbedarf.",
       "badge": "Mehrsprachig"
     },
     "base_en": {
-      "label": "Base",
+      "label": "Whisper Base",
       "description": "Schnell",
       "details": "Zuverlässige englische Transkription mit geringem Speicherbedarf.",
       "badge": "Nur Englisch"
     },
     "small": {
-      "label": "Small",
+      "label": "Whisper Small",
       "description": "Ausgewogen",
       "details": "Ausgewogenes Verhältnis von Geschwindigkeit und Genauigkeit bei moderatem Speicherbedarf.",
       "badge": "Mehrsprachig"
     },
     "small_en": {
-      "label": "Small",
+      "label": "Whisper Small",
       "description": "Ausgewogen",
       "details": "Ausgewogenes Verhältnis von Geschwindigkeit und englischer Genauigkeit bei moderatem Speicherbedarf.",
       "badge": "Nur Englisch"
     },
     "medium": {
-      "label": "Medium",
+      "label": "Whisper Medium",
       "description": "Genau",
       "details": "Hohe Genauigkeit bei moderater Geschwindigkeit. Gut für schwieriges Audio.",
       "badge": "Mehrsprachig"
     },
     "medium_en": {
-      "label": "Medium",
+      "label": "Whisper Medium",
       "description": "Genau",
       "details": "Hohe englische Genauigkeit bei moderater Geschwindigkeit.",
       "badge": "Nur Englisch"
     },
     "large_v3_turbo": {
-      "label": "Large Turbo",
+      "label": "Whisper Large Turbo",
       "description": "Schnell & genau",
       "details": "Sehr gute Genauigkeit mit höherer Geschwindigkeit als das Large-Modell und moderatem Speicherbedarf.",
       "badge": "Mehrsprachig"
     },
     "large_v3": {
-      "label": "Large",
+      "label": "Whisper Large",
       "description": "Höchste Genauigkeit",
       "details": "Höchste Genauigkeit für komplexes Audio, aber langsamer und mit hohem Speicherbedarf.",
       "badge": "Mehrsprachig"
@@ -240,37 +245,37 @@
       "badge": "Nur Englisch"
     },
     "moonshine_tiny_ar": {
-      "label": "Moonshine Tiny (Arabisch)",
+      "label": "Moonshine Tiny",
       "description": "Ultraschnell",
       "details": "Schnelle arabische Transkription auf dem Gerät mit minimalen Ressourcen.",
       "badge": "Arabisch"
     },
     "moonshine_tiny_zh": {
-      "label": "Moonshine Tiny (Chinesisch)",
+      "label": "Moonshine Tiny",
       "description": "Ultraschnell",
       "details": "Schnelle chinesische Transkription auf dem Gerät mit minimalen Ressourcen.",
       "badge": "Chinesisch"
     },
     "moonshine_tiny_ja": {
-      "label": "Moonshine Tiny (Japanisch)",
+      "label": "Moonshine Tiny",
       "description": "Ultraschnell",
       "details": "Schnelle japanische Transkription auf dem Gerät mit minimalen Ressourcen.",
       "badge": "Japanisch"
     },
     "moonshine_tiny_ko": {
-      "label": "Moonshine Tiny (Koreanisch)",
+      "label": "Moonshine Tiny",
       "description": "Ultraschnell",
       "details": "Schnelle koreanische Transkription auf dem Gerät mit minimalen Ressourcen.",
       "badge": "Koreanisch"
     },
     "moonshine_tiny_uk": {
-      "label": "Moonshine Tiny (Ukrainisch)",
+      "label": "Moonshine Tiny",
       "description": "Ultraschnell",
       "details": "Schnelle ukrainische Transkription auf dem Gerät mit minimalen Ressourcen.",
       "badge": "Ukrainisch"
     },
     "moonshine_tiny_vi": {
-      "label": "Moonshine Tiny (Vietnamesisch)",
+      "label": "Moonshine Tiny",
       "description": "Ultraschnell",
       "details": "Schnelle vietnamesische Transkription auf dem Gerät mit minimalen Ressourcen.",
       "badge": "Vietnamesisch"
@@ -282,7 +287,7 @@
       "badge": "Nur Englisch"
     },
     "moonshine_base_es": {
-      "label": "Moonshine Base (Spanisch)",
+      "label": "Moonshine Base",
       "description": "Schnell & genau",
       "details": "Schnelle spanische Transkription auf dem Gerät mit guter Genauigkeit.",
       "badge": "Spanisch"

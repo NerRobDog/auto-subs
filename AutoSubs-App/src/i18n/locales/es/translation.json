@@ -152,9 +152,22 @@
     "cached": "En caché",
     "available": "Disponible",
     "storage": "Almacenamiento:",
-    "ram": "RAM:"
+    "ram": "RAM:",
+    "accuracy": "Precisión",
+    "lightweight": "Ligero",
+    "downloadProgress": "{{progress}}%"
   },
   "models": {
+    "searchPlaceholder": "Buscar modelos...",
+    "noResults": "No se encontraron modelos.",
+    "filteredByLanguage": "Modelos filtrados por idioma seleccionado",
+    "filters": {
+      "weight": "Ligero",
+      "accuracy": "Precisión", 
+      "recommended": "Recomendado",
+      "search": "Buscar",
+      "clear": "Limpiar filtro"
+    },
     "englishOnly": {
       "title": "Modelos solo en inglés",
       "description": "Mostrar modelos especializados en inglés con mayor precisión."
@@ -168,61 +181,61 @@
       "confirmBody": "Esto eliminará el modelo {{model}} de tu dispositivo. Si lo usas en el futuro, tendrás que descargarlo de nuevo."
     },
     "tiny": {
-      "label": "Pequeño",
+      "label": "Whisper Diminuto",
       "description": "Ultra-rápido",
       "details": "Transcripción muy rápida con poca memoria. Ideal para borradores rápidos.",
       "badge": "Multilingüe"
     },
     "tiny_en": {
-      "label": "Pequeño (Inglés)",
+      "label": "Whisper Diminuto",
       "description": "Ultra-rápido",
       "details": "Transcripción en inglés muy rápida con poca memoria. Ideal para borradores rápidos.",
       "badge": "Solo inglés"
     },
     "base": {
-      "label": "Base",
+      "label": "Whisper Básico",
       "description": "Rápido",
       "details": "Transcripción fiable con bajos requisitos de memoria. Ideal para el día a día.",
       "badge": "Multilingüe"
     },
     "base_en": {
-      "label": "Base (Inglés)",
+      "label": "Whisper Básico",
       "description": "Rápido",
       "details": "Transcripción en inglés fiable con poca memoria. Ideal para el día a día.",
       "badge": "Solo inglés"
     },
     "small": {
-      "label": "Pequeño",
+      "label": "Whisper Pequeño",
       "description": "Equilibrado",
       "details": "Equilibrio entre velocidad y precisión con memoria moderada. Maneja bien acentos variados.",
       "badge": "Multilingüe"
     },
     "small_en": {
-      "label": "Small",
+      "label": "Whisper Pequeño",
       "description": "Equilibrado",
       "details": "Equilibrio entre velocidad y precisión en inglés con memoria moderada.",
       "badge": "Solo inglés"
     },
     "medium": {
-      "label": "Medium",
+      "label": "Whisper Mediano",
       "description": "Preciso",
       "details": "Alta precisión con velocidad moderada y memoria media. Bueno para audio difícil.",
       "badge": "Multilingüe"
     },
     "medium_en": {
-      "label": "Medium",
+      "label": "Whisper Mediano",
       "description": "Preciso",
       "details": "Alta precisión en inglés con velocidad moderada. Bueno para audio difícil.",
       "badge": "Solo inglés"
     },
     "large_v3_turbo": {
-      "label": "Large Turbo",
+      "label": "Whisper Grande Turbo",
       "description": "Rápido y preciso",
-      "details": "Excelente precisión con más velocidad que el modelo Large y memoria moderada.",
+      "details": "Excelente precisión con más velocidad que el modelo Grande y memoria moderada.",
       "badge": "Multilingüe"
     },
     "large_v3": {
-      "label": "Large",
+      "label": "Whisper Grande",
       "description": "Máxima precisión",
       "details": "Máxima precisión para audio complejo, pero más lento y requiere mucha memoria.",
       "badge": "Multilingüe"
@@ -234,55 +247,55 @@
       "badge": "Europeo"
     },
     "moonshine_tiny": {
-      "label": "Moonshine Tiny",
+      "label": "Moonshine Diminuto",
       "description": "Ultrarrápido",
       "details": "Transcripción en inglés ultrarrápida en el dispositivo con recursos mínimos. Ideal para uso en tiempo real.",
       "badge": "Solo inglés"
     },
     "moonshine_tiny_ar": {
-      "label": "Moonshine Tiny (Árabe)",
+      "label": "Moonshine Diminuto",
       "description": "Ultrarrápido",
       "details": "Transcripción rápida en árabe en el dispositivo con recursos mínimos.",
       "badge": "Árabe"
     },
     "moonshine_tiny_zh": {
-      "label": "Moonshine Tiny (Chino)",
+      "label": "Moonshine Diminuto",
       "description": "Ultrarrápido",
       "details": "Transcripción rápida en chino en el dispositivo con recursos mínimos.",
       "badge": "Chino"
     },
     "moonshine_tiny_ja": {
-      "label": "Moonshine Tiny (Japonés)",
+      "label": "Moonshine Diminuto",
       "description": "Ultrarrápido",
       "details": "Transcripción rápida en japonés en el dispositivo con recursos mínimos.",
       "badge": "Japonés"
     },
     "moonshine_tiny_ko": {
-      "label": "Moonshine Tiny (Coreano)",
+      "label": "Moonshine Diminuto",
       "description": "Ultrarrápido",
       "details": "Transcripción rápida en coreano en el dispositivo con recursos mínimos.",
       "badge": "Coreano"
     },
     "moonshine_tiny_uk": {
-      "label": "Moonshine Tiny (Ucraniano)",
+      "label": "Moonshine Diminuto",
       "description": "Ultrarrápido",
       "details": "Transcripción rápida en ucraniano en el dispositivo con recursos mínimos.",
       "badge": "Ucraniano"
     },
     "moonshine_tiny_vi": {
-      "label": "Moonshine Tiny (Vietnamita)",
+      "label": "Moonshine Diminuto",
       "description": "Ultrarrápido",
       "details": "Transcripción rápida en vietnamita en el dispositivo con recursos mínimos.",
       "badge": "Vietnamita"
     },
     "moonshine_base": {
-      "label": "Moonshine Base",
+      "label": "Moonshine Básico",
       "description": "Rápido y preciso",
       "details": "Transcripción rápida en inglés en el dispositivo con mejor precisión que Moonshine Tiny.",
       "badge": "Solo inglés"
     },
     "moonshine_base_es": {
-      "label": "Moonshine Base (Español)",
+      "label": "Moonshine Básico",
       "description": "Rápido y preciso",
       "details": "Transcripción rápida en español en el dispositivo con buena precisión.",
       "badge": "Español"

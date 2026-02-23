@@ -152,9 +152,14 @@
     "cached": "已缓存",
     "available": "可用",
     "storage": "存储：",
-    "ram": "内存："
+    "ram": "内存：",
+    "accuracy": "准确性",
+    "lightweight": "轻量级"
   },
   "models": {
+    "searchPlaceholder": "搜索模型...",
+    "noResults": "未找到模型。",
+    "filteredByLanguage": "根据选定语言筛选模型",
     "englishOnly": {
       "title": "英语专用模型",
       "description": "显示专用的英语模型，英语转录准确性更高。"
@@ -168,61 +173,61 @@
       "confirmBody": "这将从您的设备中删除 {{model}} 模型。如果您将来使用此模型，需要重新下载。"
     },
     "tiny": {
-      "label": "Tiny（微型）",
+      "label": "Whisper 微型",
       "description": "超快速",
       "details": "最快的转录，内存占用最小。适合快速草稿。",
       "badge": "多语言"
     },
     "tiny_en": {
-      "label": "Tiny（微型英语）",
+      "label": "Whisper 微型",
       "description": "超快速",
       "details": "最快的英语转录，内存占用最小。适合快速草稿。",
       "badge": "仅英语"
     },
     "base": {
-      "label": "Base（基础）",
+      "label": "Whisper 基础",
       "description": "快速",
       "details": "可靠的转录，内存要求低。适合日常使用。",
       "badge": "多语言"
     },
     "base_en": {
-      "label": "Base（基础英语）",
+      "label": "Whisper 基础",
       "description": "快速",
       "details": "可靠的英语转录，内存要求低。适合日常使用。",
       "badge": "仅英语"
     },
     "small": {
-      "label": "Small（小型）",
+      "label": "Whisper 小型",
       "description": "平衡",
       "details": "平衡的速度和准确性，内存占用适中。能很好地处理各种口音。",
       "badge": "多语言"
     },
     "small_en": {
-      "label": "Small（小型英语）",
+      "label": "Whisper 小型",
       "description": "平衡",
       "details": "平衡的速度和英语准确性，内存占用适中。能处理各种口音。",
       "badge": "仅英语"
     },
     "medium": {
-      "label": "Medium（中型）",
+      "label": "Whisper 中型",
       "description": "准确",
       "details": "高准确性转录，速度和内存适中。适合具有挑战性的音频。",
       "badge": "多语言"
     },
     "medium_en": {
-      "label": "Medium（中型英语）",
+      "label": "Whisper 中型",
       "description": "准确",
       "details": "高准确性英语转录，速度适中。适合具有挑战性的音频。",
       "badge": "仅英语"
     },
     "large_v3_turbo": {
-      "label": "Large Turbo（大型涡轮）",
+      "label": "Whisper 大型涡轮",
       "description": "快速且准确",
       "details": "优秀的准确性，比 Large 模型速度更快，内存占用适中。",
       "badge": "多语言"
     },
     "large_v3": {
-      "label": "Large（大型）",
+      "label": "Whisper 大型",
       "description": "最高准确性",
       "details": "复杂音频的最高准确性，但速度较慢且需要大量内存。",
       "badge": "多语言"
@@ -234,55 +239,55 @@
       "badge": "欧洲语言"
     },
     "moonshine_tiny": {
-      "label": "Moonshine Tiny",
+      "label": "Moonshine 微型",
       "description": "超快速",
       "details": "极快的本地英语转录，资源消耗极低。适合实时使用。",
       "badge": "仅英语"
     },
     "moonshine_tiny_ar": {
-      "label": "Moonshine Tiny（阿拉伯语）",
+      "label": "Moonshine 微型",
       "description": "超快速",
       "details": "快速的本地阿拉伯语转录，资源消耗极低。",
       "badge": "阿拉伯语"
     },
     "moonshine_tiny_zh": {
-      "label": "Moonshine Tiny（中文）",
+      "label": "Moonshine 微型",
       "description": "超快速",
       "details": "快速的本地中文转录，资源消耗极低。",
       "badge": "中文"
     },
     "moonshine_tiny_ja": {
-      "label": "Moonshine Tiny（日语）",
+      "label": "Moonshine 微型",
       "description": "超快速",
       "details": "快速的本地日语转录，资源消耗极低。",
       "badge": "日语"
     },
     "moonshine_tiny_ko": {
-      "label": "Moonshine Tiny（韩语）",
+      "label": "Moonshine 微型",
       "description": "超快速",
       "details": "快速的本地韩语转录，资源消耗极低。",
       "badge": "韩语"
     },
     "moonshine_tiny_uk": {
-      "label": "Moonshine Tiny（乌克兰语）",
+      "label": "Moonshine 微型",
       "description": "超快速",
       "details": "快速的本地乌克兰语转录，资源消耗极低。",
       "badge": "乌克兰语"
     },
     "moonshine_tiny_vi": {
-      "label": "Moonshine Tiny（越南语）",
+      "label": "Moonshine 微型",
       "description": "超快速",
       "details": "快速的本地越南语转录，资源消耗极低。",
       "badge": "越南语"
     },
     "moonshine_base": {
-      "label": "Moonshine Base",
+      "label": "Moonshine 基础",
       "description": "快速且准确",
       "details": "快速的本地英语转录，比Moonshine Tiny精度更高。",
       "badge": "仅英语"
     },
     "moonshine_base_es": {
-      "label": "Moonshine Base（西班牙语）",
+      "label": "Moonshine 基础",
       "description": "快速且准确",
       "details": "快速的本地西班牙语转录，精度良好。",
       "badge": "西班牙语"

@@ -1,14 +1,17 @@
-import { HardDrive, MemoryStick, Lightbulb, Feather } from "lucide-react"
+import { HardDrive, MemoryStick, Lightbulb, Feather, ListFilter, X, Star, ArrowDown } from "lucide-react"
 import { CircleCheckIcon } from "@/components/ui/icons/circle-check"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/animated-tabs"
 import { Label } from "@/components/ui/label"
+import { Badge } from "@/components/ui/badge"
 import { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command"
 import { useTranslation } from "react-i18next"
 import { Model } from "@/types/interfaces"
+import { modelFilterOrders, languageSpecificOrders } from "@/lib/models"
 import * as React from "react"
 import { UploadIcon, type UploadIconHandle } from "@/components/ui/icons/upload"
 import { ChevronsUpDownIcon, type ChevronsUpDownIconHandle } from "@/components/ui/icons/chevrons-up-down"
@@ -30,6 +33,15 @@ function ModelCachedBadge({ isDownloaded }: { isDownloaded: boolean }) {
   )
 }
 
+function FilterBadge({ children }: { children: React.ReactNode }) {
+  return (
+    <Badge variant="secondary" className="text-xs px-2 py-0.5">
+      <ArrowDown size={14} className="mr-1" />
+      {children}
+    </Badge>
+  )
+}
+
 function MetricIcons({ count, max, Icon, activeClass }: { count: number; max: number; Icon: React.ElementType; activeClass: string }) {
   return (
     <div className="flex items-center gap-0.5">
@@ -43,6 +55,8 @@ function MetricIcons({ count, max, Icon, activeClass }: { count: number; max: nu
     </div>
   )
 }
+
+type FilterType = 'weight' | 'accuracy' | 'recommended' | null
 
 export function WorkspaceHeader({
   modelsState,
@@ -72,6 +86,8 @@ export function WorkspaceHeader({
   const { t } = useTranslation()
   const uploadIconRef = React.useRef<UploadIconHandle>(null)
   const chevronsIconRef = React.useRef<ChevronsUpDownIconHandle>(null)
+  const [searchQuery, setSearchQuery] = React.useState("")
+  const [activeFilter, setActiveFilter] = React.useState<FilterType>('recommended')
 
   const modelSupportsLanguage = React.useCallback((model: Model, lang: string) => {
     if (lang === "auto") return true
@@ -89,8 +105,42 @@ export function WorkspaceHeader({
   }, [])
 
   const filteredModels = React.useMemo(() => {
-    return modelsState.filter((model) => modelSupportsLanguage(model, selectedLanguage))
-  }, [modelsState, modelSupportsLanguage, selectedLanguage])
+    let models = modelsState.filter((model) => modelSupportsLanguage(model, selectedLanguage))
+    
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      models = models.filter(model => 
+        t(model.label).toLowerCase().includes(query) ||
+        t(model.description).toLowerCase().includes(query) ||
+        t(model.badge).toLowerCase().includes(query)
+      )
+    }
+    
+    // Apply sorting/filtering using predefined orders
+    if (activeFilter && modelFilterOrders[activeFilter]) {
+      // Use language-specific order for recommended filter when available
+      let order: string[]
+      if (activeFilter === 'recommended' && languageSpecificOrders[selectedLanguage as keyof typeof languageSpecificOrders]) {
+        order = languageSpecificOrders[selectedLanguage as keyof typeof languageSpecificOrders]
+      } else {
+        order = modelFilterOrders[activeFilter]
+      }
+      
+      models.sort((a, b) => {
+        const aIndex = order.indexOf(a.value)
+        const bIndex = order.indexOf(b.value)
+        // If model not found in order array, put it at the end
+        if (aIndex === -1 && bIndex === -1) return 0
+        if (aIndex === -1) return 1
+        if (bIndex === -1) return -1
+        
+        return aIndex - bIndex
+      })
+    }
+    
+    return models
+  }, [modelsState, modelSupportsLanguage, selectedLanguage, searchQuery, activeFilter])
 
   return (
     <TooltipProvider delayDuration={400}>
@@ -126,9 +176,60 @@ export function WorkspaceHeader({
                 </div>
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-80 p-0 overflow-hidden" align="start">
+            <PopoverContent className="w-96 p-0 overflow-hidden" align="start">
               <Command className="max-h-[350px]">
-                <CommandInput placeholder="Search models..." />
+                <CommandInput
+                  placeholder={t("models.searchPlaceholder")}
+                  value={searchQuery}
+                  onValueChange={setSearchQuery}
+                  className="flex-1 border-0 focus:ring-0"
+                />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 fixed right-1.5 top-1"
+                    >
+                      <ListFilter size={14} />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-48" align="end">
+                    <DropdownMenuItem
+                      onClick={() => setActiveFilter(activeFilter === 'weight' ? null : 'weight')}
+                      className={`text-xs cursor-pointer ${activeFilter === 'weight' ? 'bg-accent' : ''}`}
+                    >
+                      <Feather size={12} className="mr-1 text-sky-500" />
+                      {t("models.filters.weight")}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => setActiveFilter(activeFilter === 'accuracy' ? null : 'accuracy')}
+                      className={`text-xs cursor-pointer ${activeFilter === 'accuracy' ? 'bg-accent' : ''}`}
+                    >
+                      <Lightbulb size={12} className="mr-1 text-amber-500" />
+                      {t("models.filters.accuracy")}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => setActiveFilter(activeFilter === 'recommended' ? null : 'recommended')}
+                      className={`text-xs cursor-pointer ${activeFilter === 'recommended' ? 'bg-accent' : ''}`}
+                    >
+                      <Star size={12} className="mr-1 text-purple-500" />
+                      {t("models.filters.recommended")}
+                    </DropdownMenuItem>
+                    {activeFilter && (
+                      <>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => setActiveFilter(null)}
+                          className="text-xs cursor-pointer text-muted-foreground"
+                        >
+                          <X size={12} className="mr-1" />
+                          {t("models.filters.clear")}
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 <CommandList>
                   <CommandEmpty>{t("models.noResults")}</CommandEmpty>
                   <CommandGroup>
@@ -157,11 +258,11 @@ export function WorkspaceHeader({
                               </p>
                             </div>
                           </div>
-                          <div className="flex items-center ml-2 flex-shrink-0 gap-2">
+                          <div className="flex items-center mx-1 flex-shrink-0 gap-2">
                             {downloadingModel === model.value ? (
                               <div className="flex items-center gap-2">
                                 <Progress value={downloadProgress} className="h-1 w-12" />
-                                <span className="text-xs text-blue-600 dark:text-blue-400">{downloadProgress}%</span>
+                                <span className="text-xs text-blue-600 dark:text-blue-400">{t("modelStatus.downloadProgress", { progress: downloadProgress })}</span>
                               </div>
                             ) : (
                               <Tooltip>
@@ -189,11 +290,11 @@ export function WorkspaceHeader({
                                     <div className="flex items-center gap-4 text-xs">
                                       <div className="flex items-center gap-1.5">
                                         <MetricIcons count={model.accuracy} max={3} Icon={Lightbulb} activeClass="text-amber-500" />
-                                        <span>Accuracy</span>
+                                        <span>{t("modelStatus.accuracy")}</span>
                                       </div>
                                       <div className="flex items-center gap-1.5">
                                         <MetricIcons count={model.weight} max={3} Icon={Feather} activeClass="text-sky-500" />
-                                        <span>Lightweight</span>
+                                        <span>{t("modelStatus.lightweight")}</span>
                                       </div>
                                     </div>
                                   </div>
@@ -210,10 +311,21 @@ export function WorkspaceHeader({
 
               {/* Bottom Section */}
               <div className="border-t bg-muted/30">
-                <div className="px-4 pt-1 pb-2">
-                  <Label className="text-xs text-muted-foreground">
-                    Models filtered by selected language
-                  </Label>
+                <div className="px-3 py-2">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-xs text-muted-foreground">
+                      {t("models.filteredByLanguage")}
+                    </Label>
+                    {(activeFilter || searchQuery) && (
+                      <div className="flex items-center">
+                        {activeFilter && (
+                          <FilterBadge>
+                            {t(`models.filters.${activeFilter}`)}
+                          </FilterBadge>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </PopoverContent>
@@ -241,7 +353,7 @@ export function WorkspaceHeader({
             >
               <img
                 src="/davinci-resolve-logo.png"
-                alt="DaVinci Resolve logo"
+                alt={t("titlebar.resolve.productName")}
                 className="w-5 h-5"
               />
               {t("actionBar.mode.timeline")}

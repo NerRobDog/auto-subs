@@ -153,9 +153,22 @@
     "cached": "Downloaded",
     "available": "Not downloaded",
     "storage": "Storage:",
-    "ram": "RAM:"
+    "ram": "RAM:",
+    "accuracy": "Accuracy",
+    "lightweight": "Lightweight",
+    "downloadProgress": "{{progress}}%"
   },
   "models": {
+    "searchPlaceholder": "Search models...",
+    "noResults": "No models found.",
+    "filteredByLanguage": "Filtered by selected language",
+    "filters": {
+      "weight": "Lightweight",
+      "accuracy": "Accuracy", 
+      "recommended": "Recommended",
+      "search": "Search",
+      "clear": "Clear filter"
+    },
     "englishOnly": {
       "title": "English-Only Models",
       "description": "Show specialised English models with higher accuracy for English transcription."
@@ -169,61 +182,61 @@
       "confirmBody": "This will delete the {{model}} model from your device. If you use this model in future it will need to be downloaded again."
     },
     "tiny": {
-      "label": "Tiny",
+      "label": "Whisper Tiny",
       "description": "Ultra-fast",
       "details": "Fastest transcription with minimal memory. Ideal for quick drafts.",
       "badge": "Multilingual"
     },
     "tiny_en": {
-      "label": "Tiny",
+      "label": "Whisper Tiny",
       "description": "Ultra-fast",
       "details": "Fastest English transcription with minimal memory. Ideal for quick drafts.",
       "badge": "English Only"
     },
     "base": {
-      "label": "Base",
+      "label": "Whisper Base",
       "description": "Fast",
       "details": "Reliable transcription with low memory requirements. Great for everyday use.",
       "badge": "Multilingual"
     },
     "base_en": {
-      "label": "Base",
+      "label": "Whisper Base",
       "description": "Fast",
       "details": "Reliable English transcription with low memory. Great for everyday use.",
       "badge": "English Only"
     },
     "small": {
-      "label": "Small",
+      "label": "Whisper Small",
       "description": "Balanced",
       "details": "Balanced speed and accuracy with moderate memory. Handles varied accents well.",
       "badge": "Multilingual"
     },
     "small_en": {
-      "label": "Small",
+      "label": "Whisper Small",
       "description": "Balanced",
       "details": "Balanced speed and English accuracy with moderate memory. Handles varied accents.",
       "badge": "English Only"
     },
     "medium": {
-      "label": "Medium",
+      "label": "Whisper Medium",
       "description": "Accurate",
       "details": "High accuracy transcription with moderate speed and memory. Good for challenging audio.",
       "badge": "Multilingual"
     },
     "medium_en": {
-      "label": "Medium",
+      "label": "Whisper Medium",
       "description": "Accurate",
       "details": "High accuracy English transcription with moderate speed. Good for challenging audio.",
       "badge": "English Only"
     },
     "large_v3_turbo": {
-      "label": "Large Turbo",
+      "label": "Whisper Large Turbo",
       "description": "Fast & Accurate",
       "details": "Excellent accuracy with faster speed than Large model and moderate memory.",
       "badge": "Multilingual"
     },
     "large_v3": {
-      "label": "Large",
+      "label": "Whisper Large",
       "description": "Highest Accuracy",
       "details": "Highest accuracy for complex audio, but slower and requires significant memory.",
       "badge": "Multilingual"

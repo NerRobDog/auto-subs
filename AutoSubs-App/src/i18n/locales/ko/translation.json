@@ -103,20 +103,25 @@
     "available": "다운로드 안 됨",
     "cached": "다운로드됨",
     "ram": "RAM:",
-    "storage": "저장 공간:"
+    "storage": "저장 공간:",
+    "accuracy": "정확도",
+    "lightweight": "가벼움"
   },
   "models": {
+    "searchPlaceholder": "모델 검색...",
+    "noResults": "모델을 찾을 수 없습니다.",
+    "filteredByLanguage": "선택된 언어로 모델 필터링됨",
     "base": {
       "badge": "다국어",
       "description": "빠름",
       "details": "낮은 메모리로 안정적인 자막 생성. 일상 사용에 적합.",
-      "label": "Base"
+      "label": "Whisper 기본"
     },
     "base_en": {
       "badge": "영어 전용",
       "description": "빠름",
       "details": "낮은 메모리로 안정적인 영어 자막 생성. 일상 사용에 적합.",
-      "label": "Base (영어)"
+      "label": "Whisper 기본"
     },
     "englishOnly": {
       "description": "영어 자막 정확도가 높은 영어 전용 모델을 표시합니다.",
@@ -126,13 +131,13 @@
       "badge": "다국어",
       "description": "최고 정확도",
       "details": "복잡한 오디오에 최고의 정확도를 제공하지만 느리고 많은 메모리가 필요합니다.",
-      "label": "Large"
+      "label": "Whisper 대형"
     },
     "large_v3_turbo": {
       "badge": "다국어",
       "description": "빠르고 정확",
       "details": "Large 모델보다 빠른 속도로 우수한 정확도, 적당한 메모리 사용.",
-      "label": "Large Turbo"
+      "label": "Whisper 대형 터보"
     },
     "manage": {
       "confirmBody": "{{model}} 모델을 기기에서 삭제합니다. 나중에 이 모델을 사용하면 다시 다운로드해야 합니다.",
@@ -146,67 +151,67 @@
       "badge": "영어 전용",
       "description": "빠르고 정확",
       "details": "Moonshine Tiny보다 높은 정확도의 빠른 온디바이스 영어 자막 생성.",
-      "label": "Moonshine Base"
+      "label": "Moonshine 기본"
     },
     "moonshine_base_es": {
       "badge": "스페인어",
       "description": "빠르고 정확",
       "details": "좋은 정확도의 빠른 온디바이스 스페인어 자막 생성.",
-      "label": "Moonshine Base (스페인어)"
+      "label": "Moonshine 기본"
     },
     "moonshine_tiny": {
       "badge": "영어 전용",
       "description": "초고속",
       "details": "최소 리소스로 초고속 온디바이스 영어 자막 생성. 실시간 사용에 최적.",
-      "label": "Moonshine Tiny"
+      "label": "Moonshine 초소형"
     },
     "moonshine_tiny_ar": {
       "badge": "아랍어",
       "description": "초고속",
       "details": "최소 리소스로 빠른 온디바이스 아랍어 자막 생성.",
-      "label": "Moonshine Tiny (아랍어)"
+      "label": "Moonshine 초소형"
     },
     "moonshine_tiny_ja": {
       "badge": "일본어",
       "description": "초고속",
       "details": "최소 리소스로 빠른 온디바이스 일본어 자막 생성.",
-      "label": "Moonshine Tiny (일본어)"
+      "label": "Moonshine 초소형"
     },
     "moonshine_tiny_ko": {
       "badge": "한국어",
       "description": "초고속",
       "details": "최소 리소스로 빠른 온디바이스 한국어 자막 생성.",
-      "label": "Moonshine Tiny (한국어)"
+      "label": "Moonshine 초소형"
     },
     "moonshine_tiny_uk": {
       "badge": "우크라이나어",
       "description": "초고속",
       "details": "최소 리소스로 빠른 온디바이스 우크라이나어 자막 생성.",
-      "label": "Moonshine Tiny (우크라이나어)"
+      "label": "Moonshine 초소형"
     },
     "moonshine_tiny_vi": {
       "badge": "베트남어",
       "description": "초고속",
       "details": "최소 리소스로 빠른 온디바이스 베트남어 자막 생성.",
-      "label": "Moonshine Tiny (베트남어)"
+      "label": "Moonshine 초소형"
     },
     "moonshine_tiny_zh": {
       "badge": "중국어",
       "description": "초고속",
       "details": "최소 리소스로 빠른 온디바이스 중국어 자막 생성.",
-      "label": "Moonshine Tiny (중국어)"
+      "label": "Moonshine 초소형"
     },
     "medium": {
       "badge": "다국어",
       "description": "정확",
       "details": "적당한 속도와 메모리로 높은 정확도. 어려운 오디오에 적합.",
-      "label": "Medium"
+      "label": "Whisper 중형"
     },
     "medium_en": {
       "badge": "영어 전용",
       "description": "정확",
       "details": "적당한 속도로 높은 영어 정확도. 어려운 오디오에 적합.",
-      "label": "Medium (영어)"
+      "label": "Whisper 중형"
     },
     "parakeet": {
       "badge": "유럽어",
@@ -218,25 +223,25 @@
       "badge": "다국어",
       "description": "균형",
       "details": "적당한 메모리로 속도와 정확도의 균형. 다양한 억양에 잘 대응.",
-      "label": "Small"
+      "label": "Whisper 소형"
     },
     "small_en": {
       "badge": "영어 전용",
       "description": "균형",
       "details": "적당한 메모리로 속도와 영어 정확도의 균형. 다양한 억양에 대응.",
-      "label": "Small (영어)"
+      "label": "Whisper 소형"
     },
     "tiny": {
       "badge": "다국어",
       "description": "초고속",
       "details": "최소 메모리로 가장 빠른 자막 생성. 빠른 초안에 최적.",
-      "label": "Tiny"
+      "label": "Whisper 초소형"
     },
     "tiny_en": {
       "badge": "영어 전용",
       "description": "초고속",
       "details": "최소 메모리로 가장 빠른 영어 자막 생성. 빠른 초안에 최적.",
-      "label": "Tiny (영어)"
+      "label": "Whisper 초소형"
     }
   },
   "progressSteps": {
