@@ -159,7 +159,7 @@
   "models": {
     "searchPlaceholder": "Rechercher des modèles...",
     "noResults": "Aucun modèle trouvé.",
-    "filteredByLanguage": "Modèles filtrés par langue sélectionnée",
+    "filteredByLanguage": "Modèles filtrés par langue",
     "englishOnly": {
       "title": "Modèles uniquement anglais",
       "description": "Afficher des modèles anglais spécialisés avec une meilleure précision."

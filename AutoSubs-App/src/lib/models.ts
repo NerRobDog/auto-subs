@@ -19,10 +19,9 @@ export const modelFilterOrders = {
     "large-v3-turbo", "parakeet", "medium", "medium.en", "large-v3"
   ],
   accuracy: [
-    "large-v3", "large-v3-turbo", "parakeet", "medium.en", "medium",
-    "moonshine-base", "small.en", "small", "moonshine-tiny-ar", "moonshine-tiny-zh", 
-    "moonshine-tiny-ja", "moonshine-tiny-ko", "moonshine-tiny-uk", 
-    "moonshine-tiny-vi", "moonshine-base-es",
+    "large-v3", "large-v3-turbo", "parakeet", "moonshine-tiny-vi", "moonshine-tiny-ar", "moonshine-tiny-zh", "moonshine-tiny-ja", "moonshine-tiny-ko", "medium.en", "medium",
+    "moonshine-base", "small.en", "small", "moonshine-tiny-uk", 
+    "moonshine-base-es",
     "tiny", "tiny.en", "base", "base.en", "moonshine-tiny"
   ],
   recommended: [
@@ -30,32 +29,6 @@ export const modelFilterOrders = {
     "moonshine-tiny-ko", "moonshine-tiny-uk", "moonshine-tiny-vi", "moonshine-base", "moonshine-base-es", "small.en", "small",
     "medium", "medium.en",
     "tiny", "tiny.en", "base", "base.en", "moonshine-tiny"
-  ]
-};
-
-/**
- * Language-specific model orders for recommended filter
- * Only defined for languages that have specific models worth highlighting
- */
-export const languageSpecificOrders = {
-  en: [
-    "parakeet", "large-v3-turbo", "small.en", "small", "tiny.en", 
-    "medium.en", "base.en", "large-v3", "medium", "tiny", "base",
-    "moonshine-base", "moonshine-base-es", "moonshine-tiny-ar", "moonshine-tiny-zh", 
-    "moonshine-tiny-ja", "moonshine-tiny-ko", "moonshine-tiny-uk", 
-    "moonshine-tiny-vi", "moonshine-tiny"
-  ],
-  ja: [
-    "parakeet", "large-v3-turbo", "moonshine-tiny-ja", "small", "small.en",
-    "large-v3", "medium", "medium.en", "tiny", "tiny.en", "base", "base.en",
-    "moonshine-tiny-ar", "moonshine-tiny-zh", "moonshine-tiny-ko", "moonshine-tiny-uk", 
-    "moonshine-tiny-vi", "moonshine-base", "moonshine-base-es", "moonshine-tiny"
-  ],
-  es: [
-    "parakeet", "large-v3-turbo", "moonshine-base-es", "small", "small.en",
-    "large-v3", "medium", "medium.en", "tiny", "tiny.en", "base", "base.en",
-    "moonshine-tiny-ar", "moonshine-tiny-zh", "moonshine-tiny-ja", "moonshine-tiny-ko", 
-    "moonshine-tiny-uk", "moonshine-tiny-vi", "moonshine-base", "moonshine-tiny"
   ]
 };
 
@@ -346,3 +319,38 @@ export const models: Model[] = [
     isDownloaded: false,
   },
 ];
+
+/**
+ * Check if a model supports a specific language
+ */
+export function modelSupportsLanguage(model: Model, language: string): boolean {
+  if (language === "auto") return true
+
+  switch (model.languageSupport.kind) {
+    case "multilingual":
+      return true
+    case "single_language":
+      return model.languageSupport.language === language
+    case "restricted":
+      return model.languageSupport.languages.includes(language)
+    default:
+      return true
+  }
+}
+
+/**
+ * Get the first recommended model that supports the given language
+ */
+export function getFirstRecommendedModelForLanguage(language: string): Model | null {
+  // Use the general recommended order for all languages
+  const order = modelFilterOrders.recommended
+  
+  for (const modelValue of order) {
+    const model = models.find(m => m.value === modelValue)
+    if (model && modelSupportsLanguage(model, language)) {
+      return model
+    }
+  }
+  
+  return null
+}

@@ -161,7 +161,11 @@
   "models": {
     "searchPlaceholder": "Search models...",
     "noResults": "No models found.",
-    "filteredByLanguage": "Filtered by selected language",
+    "filteredByLanguage": "Filtered by language",
+    "groups": {
+      "specialized": "Specialised for Selected Language",
+      "general": "General Models"
+    },
     "filters": {
       "weight": "Lightweight",
       "accuracy": "Accuracy", 

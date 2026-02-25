@@ -159,7 +159,7 @@
   "models": {
     "searchPlaceholder": "搜索模型...",
     "noResults": "未找到模型。",
-    "filteredByLanguage": "根据选定语言筛选模型",
+    "filteredByLanguage": "根据语言筛选模型",
     "englishOnly": {
       "title": "英语专用模型",
       "description": "显示专用的英语模型，英语转录准确性更高。"

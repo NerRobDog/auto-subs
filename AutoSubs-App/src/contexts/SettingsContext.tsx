@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { load, Store } from '@tauri-apps/plugin-store';
 import { Settings } from '@/types/interfaces';
 import { initI18n, normalizeUiLanguage } from '@/i18n';
+import { models, modelSupportsLanguage, getFirstRecommendedModelForLanguage } from '@/lib/models';
 
 export const DEFAULT_SETTINGS: Settings = {
   // Mode
@@ -121,10 +122,29 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   // Update a setting
   // This enforces that key is a valid Settings property, and value must match its type
   function updateSetting<K extends keyof Settings>(key: K, value: Settings[K]) {
-    setSettings(prev => ({
-      ...prev,
-      [key]: key === 'uiLanguage' ? normalizeUiLanguage(value as string) : value
-    }));
+    setSettings(prev => {
+      const newSettings = {
+        ...prev,
+        [key]: key === 'uiLanguage' ? normalizeUiLanguage(value as string) : value
+      };
+
+      // Check if language changed and current model supports the new language
+      if (key === 'language' && value !== prev.language) {
+        const currentModel = models[prev.model];
+        if (!modelSupportsLanguage(currentModel, value as string)) {
+          // Find first recommended model that supports the new language
+          const recommendedModel = getFirstRecommendedModelForLanguage(value as string);
+          if (recommendedModel) {
+            const modelIndex = models.findIndex(m => m.value === recommendedModel.value);
+            if (modelIndex !== -1) {
+              newSettings.model = modelIndex;
+            }
+          }
+        }
+      }
+
+      return newSettings;
+    });
   }
 
   return (

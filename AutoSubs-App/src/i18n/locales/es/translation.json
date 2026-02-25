@@ -160,7 +160,11 @@
   "models": {
     "searchPlaceholder": "Buscar modelos...",
     "noResults": "No se encontraron modelos.",
-    "filteredByLanguage": "Modelos filtrados por idioma seleccionado",
+    "filteredByLanguage": "Modelos filtrados por idioma",
+    "groups": {
+      "specialized": "Especializado para el idioma seleccionado",
+      "general": "Modelos generales"
+    },
     "filters": {
       "weight": "Ligero",
       "accuracy": "Precisión", 

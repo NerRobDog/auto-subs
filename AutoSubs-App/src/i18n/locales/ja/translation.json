@@ -111,7 +111,11 @@
   "models": {
     "searchPlaceholder": "モデルを検索...",
     "noResults": "モデルが見つかりません。",
-    "filteredByLanguage": "選択された言語でモデルをフィルター",
+    "filteredByLanguage": "言語でモデルをフィルター",
+    "groups": {
+      "specialized": "選択言語に特化したモデル",
+      "general": "汎用モデル"
+    },
     "filters": {
       "weight": "軽量",
       "accuracy": "精度", 
