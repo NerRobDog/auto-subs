@@ -158,6 +158,13 @@ jobs:
 
           Expand-Archive -Path "ffmpeg-x86_64-pc-windows-msvc.zip" -DestinationPath "." -Force
           Remove-Item "ffmpeg-x86_64-pc-windows-msvc.zip" -Force
+          if (Test-Path "ffmpeg.exe") {
+            Move-Item "ffmpeg.exe" "ffmpeg-x86_64-pc-windows-msvc.exe" -Force
+          }
+          if (Test-Path "ffprobe.exe") {
+            Move-Item "ffprobe.exe" "ffprobe-x86_64-pc-windows-msvc.exe" -Force
+          }
+          Get-ChildItem
 
       - name: Build unsigned Windows installer
         working-directory: AutoSubs-App
