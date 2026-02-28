@@ -18,19 +18,6 @@ permissions:
 jobs:
   build-windows-cpu:
     runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - variant: default
-          - variant: dynamic-crt
-            rustflags: -C target-feature=-crt-static
-          - variant: dynamic-crt-cc-md
-            rustflags: -C target-feature=-crt-static
-            cflags: /MD
-            cxxflags: /MD
-          - variant: static-crt-cmake
-            cmakeArgs: -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded
 
     steps:
       - name: Checkout repo
@@ -94,10 +81,9 @@ jobs:
         working-directory: AutoSubs-App
         shell: pwsh
         env:
-          RUSTFLAGS: ${{ matrix.rustflags }}
-          CFLAGS_x86_64_pc_windows_msvc: ${{ matrix.cflags }}
-          CXXFLAGS_x86_64_pc_windows_msvc: ${{ matrix.cxxflags }}
-          CMAKE_ARGS: ${{ matrix.cmakeArgs }}
+          RUSTFLAGS: -C target-feature=-crt-static
+          CFLAGS_x86_64_pc_windows_msvc: /MD
+          CXXFLAGS_x86_64_pc_windows_msvc: /MD
         run: |
           @'
           {
@@ -112,11 +98,10 @@ jobs:
           }
           '@ | Set-Content -Path "src-tauri/tauri.preview.windows.conf.json" -Encoding utf8
 
-          Write-Host "CRT variant: ${{ matrix.variant }}"
+          Write-Host "CRT variant: dynamic-crt-cc-md"
           Write-Host "RUSTFLAGS=$env:RUSTFLAGS"
           Write-Host "CFLAGS_x86_64_pc_windows_msvc=$env:CFLAGS_x86_64_pc_windows_msvc"
           Write-Host "CXXFLAGS_x86_64_pc_windows_msvc=$env:CXXFLAGS_x86_64_pc_windows_msvc"
-          Write-Host "CMAKE_ARGS=$env:CMAKE_ARGS"
 
           npx tauri build -b nsis -c src-tauri/tauri.preview.windows.conf.json -- --no-default-features
 
@@ -133,11 +118,11 @@ jobs:
             throw "Windows installer not found in $bundleDir"
           }
 
-          Copy-Item $installer.FullName (Join-Path $artifactDir "AutoSubs-windows-cpu-${{ matrix.variant }}.exe")
+          Copy-Item $installer.FullName (Join-Path $artifactDir "AutoSubs-windows-cpu.exe")
 
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: autosubs-windows-cpu-${{ matrix.variant }}
+          name: autosubs-windows-cpu
           path: preview-artifacts/*
           if-no-files-found: error
