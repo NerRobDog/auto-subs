@@ -1,6 +1,9 @@
 name: Preview Windows CPU Build
 
 on:
+  push:
+    branches:
+      - codex/windows-cpu-build
   workflow_dispatch:
     inputs:
       ref:
