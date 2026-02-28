@@ -158,12 +158,23 @@ jobs:
 
           Expand-Archive -Path "ffmpeg-x86_64-pc-windows-msvc.zip" -DestinationPath "." -Force
           Remove-Item "ffmpeg-x86_64-pc-windows-msvc.zip" -Force
-          if (Test-Path "ffmpeg.exe") {
-            Move-Item "ffmpeg.exe" "ffmpeg-x86_64-pc-windows-msvc.exe" -Force
+
+          $ffmpeg = Get-ChildItem -Recurse -File -Filter "ffmpeg-x86_64-pc-windows-msvc.exe" |
+            Where-Object { $_.FullName -notmatch "__MACOSX" } |
+            Select-Object -First 1
+          $ffprobe = Get-ChildItem -Recurse -File -Filter "ffprobe-x86_64-pc-windows-msvc.exe" |
+            Where-Object { $_.FullName -notmatch "__MACOSX" } |
+            Select-Object -First 1
+
+          if (-not $ffmpeg) {
+            throw "ffmpeg Windows sidecar not found after extraction"
           }
-          if (Test-Path "ffprobe.exe") {
-            Move-Item "ffprobe.exe" "ffprobe-x86_64-pc-windows-msvc.exe" -Force
+          if (-not $ffprobe) {
+            throw "ffprobe Windows sidecar not found after extraction"
           }
+
+          Move-Item $ffmpeg.FullName ".\\ffmpeg-x86_64-pc-windows-msvc.exe" -Force
+          Move-Item $ffprobe.FullName ".\\ffprobe-x86_64-pc-windows-msvc.exe" -Force
           Get-ChildItem
 
       - name: Build unsigned Windows installer
