@@ -159,6 +159,21 @@ jobs:
           Expand-Archive -Path "ffmpeg-x86_64-pc-windows-msvc.zip" -DestinationPath "." -Force
           Remove-Item "ffmpeg-x86_64-pc-windows-msvc.zip" -Force
 
+      - name: Install Vulkan SDK
+        uses: humbletim/install-vulkan-sdk@v1.2
+        with:
+          cache: true
+
+      - name: Verify Vulkan SDK
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          if (-not $env:VULKAN_SDK) {
+            throw "VULKAN_SDK is not set"
+          }
+          Write-Host "VULKAN_SDK=$env:VULKAN_SDK"
+          & "$env:VULKAN_SDK\Bin\glslc.exe" --version
+
       - name: Build unsigned Windows installer
         working-directory: AutoSubs-App
         shell: pwsh
