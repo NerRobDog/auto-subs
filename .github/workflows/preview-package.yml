@@ -25,7 +25,7 @@ jobs:
             ffmpeg_zip: ffmpeg-aarch64-apple-darwin.zip
             ffmpeg_bin: ffmpeg-aarch64-apple-darwin
             ffprobe_bin: ffprobe-aarch64-apple-darwin
-          - platform: macos-13
+          - platform: macos-15-intel
             arch: x86_64
             features: mac-x86_64
             artifact_suffix: macos-x86_64
@@ -102,7 +102,12 @@ jobs:
           set -euo pipefail
           mkdir -p preview-artifacts
           cp -R "AutoSubs-App/src-tauri/target/release/bundle/macos/AutoSubs.app" "preview-artifacts/AutoSubs-${{ matrix.artifact_suffix }}.app"
-          cp "AutoSubs-App/src-tauri/target/release/bundle/dmg/AutoSubs_3.0.8_${{ matrix.arch }}.dmg" "preview-artifacts/AutoSubs-${{ matrix.artifact_suffix }}.dmg"
+          DMG_PATH="$(find AutoSubs-App/src-tauri/target/release/bundle/dmg -maxdepth 1 -name '*.dmg' | head -n 1)"
+          if [ -z "$DMG_PATH" ]; then
+            echo "macOS DMG not found" >&2
+            exit 1
+          fi
+          cp "$DMG_PATH" "preview-artifacts/AutoSubs-${{ matrix.artifact_suffix }}.dmg"
 
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
@@ -158,7 +163,20 @@ jobs:
         working-directory: AutoSubs-App
         shell: pwsh
         run: |
-          npx tauri build -b nsis -c '{"bundle":{"createUpdaterArtifacts":false,"windows":{"certificateThumbprint":null,"timestampUrl":null,"signCommand":null}}}' -- --no-default-features --features windows
+          @'
+          {
+            "bundle": {
+              "createUpdaterArtifacts": false,
+              "windows": {
+                "certificateThumbprint": null,
+                "timestampUrl": null,
+                "signCommand": null
+              }
+            }
+          }
+          '@ | Set-Content -Path "src-tauri/tauri.preview.windows.conf.json" -Encoding utf8
+
+          npx tauri build -b nsis -c src-tauri/tauri.preview.windows.conf.json -- --no-default-features --features windows
 
       - name: Stage Windows artifacts
         shell: pwsh
