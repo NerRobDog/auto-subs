@@ -1,0 +1,183 @@
+name: Preview Package AutoSubs
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Git ref to build
+        required: false
+        default: main
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build-mac:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-15
+            arch: arm64
+            features: mac-aarch
+            artifact_suffix: macos-arm64
+            ffmpeg_zip: ffmpeg-aarch64-apple-darwin.zip
+            ffmpeg_bin: ffmpeg-aarch64-apple-darwin
+            ffprobe_bin: ffprobe-aarch64-apple-darwin
+          - platform: macos-13
+            arch: x86_64
+            features: mac-x86_64
+            artifact_suffix: macos-x86_64
+            ffmpeg_zip: ffmpeg-x86_64-apple-darwin.zip
+            ffmpeg_bin: ffmpeg-x86_64-apple-darwin
+            ffprobe_bin: ffprobe-x86_64-apple-darwin
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: AutoSubs-App/package-lock.json
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.arch == 'arm64' && 'aarch64-apple-darwin' || 'x86_64-apple-darwin' }}
+
+      - name: Use Xcode 16.4 (ARM only)
+        if: matrix.arch == 'arm64'
+        run: |
+          sudo xcode-select -s /Applications/Xcode_16.4.app
+          echo "DEVELOPER_DIR=/Applications/Xcode_16.4.app/Contents/Developer" >> $GITHUB_ENV
+          echo "SDKROOT=$(xcrun --sdk macosx --show-sdk-path)" >> $GITHUB_ENV
+          echo "MACOSX_DEPLOYMENT_TARGET=13.3" >> $GITHUB_ENV
+          echo "CC=$(xcrun -f clang)" >> $GITHUB_ENV
+          echo "CXX=$(xcrun -f clang++)" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        working-directory: AutoSubs-App
+        run: npm install
+
+      - name: Download ffmpeg sidecars
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cd AutoSubs-App/src-tauri
+          mkdir -p binaries
+          cd binaries
+
+          gh release download \
+            --repo tmoroney/ffmpeg-binaries \
+            --pattern "${{ matrix.ffmpeg_zip }}" \
+            --clobber
+
+          unzip -jo "${{ matrix.ffmpeg_zip }}"
+          chmod +x "${{ matrix.ffmpeg_bin }}" "${{ matrix.ffprobe_bin }}"
+          rm -f "${{ matrix.ffmpeg_zip }}"
+
+      - name: Configure ggml/whisper for ARM
+        if: matrix.arch == 'arm64'
+        run: |
+          echo 'CFLAGS=-U__ARM_FEATURE_MATMUL_INT8' >> "$GITHUB_ENV"
+          echo 'CXXFLAGS=-U__ARM_FEATURE_MATMUL_INT8' >> "$GITHUB_ENV"
+          echo 'CMAKE_ARGS=-DGGML_I8MM=OFF -DGGML_NATIVE=OFF -DCMAKE_OSX_DEPLOYMENT_TARGET=13.3' >> "$GITHUB_ENV"
+
+      - name: Build unsigned macOS bundles
+        working-directory: AutoSubs-App
+        run: |
+          npx tauri build -b app,dmg -c '{"bundle":{"createUpdaterArtifacts":false}}' -- --no-default-features --features "${{ matrix.features }}"
+
+      - name: Stage macOS artifacts
+        run: |
+          set -euo pipefail
+          mkdir -p preview-artifacts
+          cp -R "AutoSubs-App/src-tauri/target/release/bundle/macos/AutoSubs.app" "preview-artifacts/AutoSubs-${{ matrix.artifact_suffix }}.app"
+          cp "AutoSubs-App/src-tauri/target/release/bundle/dmg/AutoSubs_3.0.8_${{ matrix.arch }}.dmg" "preview-artifacts/AutoSubs-${{ matrix.artifact_suffix }}.dmg"
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: autosubs-${{ matrix.artifact_suffix }}
+          path: preview-artifacts/*
+          if-no-files-found: error
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: AutoSubs-App/package-lock.json
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Install dependencies
+        working-directory: AutoSubs-App
+        run: npm install
+
+      - name: Download ffmpeg sidecars
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          Set-Location "AutoSubs-App/src-tauri"
+          New-Item -ItemType Directory -Force -Path "binaries" | Out-Null
+          Set-Location "binaries"
+
+          gh release download `
+            --repo tmoroney/ffmpeg-binaries `
+            --pattern "ffmpeg-x86_64-pc-windows-msvc.zip" `
+            --clobber
+
+          Expand-Archive -Path "ffmpeg-x86_64-pc-windows-msvc.zip" -DestinationPath "." -Force
+          Remove-Item "ffmpeg-x86_64-pc-windows-msvc.zip" -Force
+
+      - name: Build unsigned Windows installer
+        working-directory: AutoSubs-App
+        shell: pwsh
+        run: |
+          npx tauri build -b nsis -c '{"bundle":{"createUpdaterArtifacts":false,"windows":{"certificateThumbprint":null,"timestampUrl":null,"signCommand":null}}}' -- --no-default-features --features windows
+
+      - name: Stage Windows artifacts
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $bundleDir = "AutoSubs-App/src-tauri/target/release/bundle/nsis"
+          $artifactDir = "preview-artifacts"
+          New-Item -ItemType Directory -Force -Path $artifactDir | Out-Null
+
+          $installer = Get-ChildItem $bundleDir -Filter "*.exe" | Select-Object -First 1
+          if (-not $installer) {
+            throw "Windows installer not found in $bundleDir"
+          }
+
+          Copy-Item $installer.FullName (Join-Path $artifactDir "AutoSubs-windows-x86_64.exe")
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: autosubs-windows-x86_64
+          path: preview-artifacts/*
+          if-no-files-found: error
