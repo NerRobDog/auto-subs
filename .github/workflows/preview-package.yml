@@ -174,6 +174,26 @@ jobs:
           Write-Host "VULKAN_SDK=$env:VULKAN_SDK"
           & "$env:VULKAN_SDK\Bin\glslc.exe" --version
 
+      - name: Export Vulkan paths for CMake
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $vulkanRoot = $env:VULKAN_SDK
+          $vulkanInclude = Join-Path $vulkanRoot "Include"
+          $vulkanLibrary = Join-Path $vulkanRoot "Lib\vulkan-1.lib"
+
+          if (-not (Test-Path $vulkanInclude)) {
+            throw "Vulkan include directory not found: $vulkanInclude"
+          }
+          if (-not (Test-Path $vulkanLibrary)) {
+            throw "Vulkan library not found: $vulkanLibrary"
+          }
+
+          "Vulkan_ROOT=$vulkanRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "Vulkan_INCLUDE_DIR=$vulkanInclude" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "Vulkan_LIBRARY=$vulkanLibrary" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "CMAKE_PREFIX_PATH=$vulkanRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
       - name: Build unsigned Windows installer
         working-directory: AutoSubs-App
         shell: pwsh
