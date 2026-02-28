@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Repeat2, Type, Upload, Users, X } from "lucide-react"
+import { Repeat2, Type, Upload, Users } from "lucide-react"
 import { LayersIcon } from "@/components/ui/icons/layers"
 import { Button } from "@/components/ui/button"
 import { ButtonGroup } from "@/components/ui/button-group"
