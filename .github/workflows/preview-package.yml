@@ -159,41 +159,6 @@ jobs:
           Expand-Archive -Path "ffmpeg-x86_64-pc-windows-msvc.zip" -DestinationPath "." -Force
           Remove-Item "ffmpeg-x86_64-pc-windows-msvc.zip" -Force
 
-      - name: Install Vulkan SDK
-        uses: humbletim/install-vulkan-sdk@v1.2
-        with:
-          cache: true
-
-      - name: Verify Vulkan SDK
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = "Stop"
-          if (-not $env:VULKAN_SDK) {
-            throw "VULKAN_SDK is not set"
-          }
-          Write-Host "VULKAN_SDK=$env:VULKAN_SDK"
-          & "$env:VULKAN_SDK\Bin\glslc.exe" --version
-
-      - name: Export Vulkan paths for CMake
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = "Stop"
-          $vulkanRoot = $env:VULKAN_SDK
-          $vulkanInclude = Join-Path $vulkanRoot "Include"
-          $vulkanLibrary = Join-Path $vulkanRoot "Lib\vulkan-1.lib"
-
-          if (-not (Test-Path $vulkanInclude)) {
-            throw "Vulkan include directory not found: $vulkanInclude"
-          }
-          if (-not (Test-Path $vulkanLibrary)) {
-            throw "Vulkan library not found: $vulkanLibrary"
-          }
-
-          "Vulkan_ROOT=$vulkanRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          "Vulkan_INCLUDE_DIR=$vulkanInclude" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          "Vulkan_LIBRARY=$vulkanLibrary" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          "CMAKE_PREFIX_PATH=$vulkanRoot" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-
       - name: Build unsigned Windows installer
         working-directory: AutoSubs-App
         shell: pwsh
@@ -211,7 +176,7 @@ jobs:
           }
           '@ | Set-Content -Path "src-tauri/tauri.preview.windows.conf.json" -Encoding utf8
 
-          npx tauri build -b nsis -c src-tauri/tauri.preview.windows.conf.json -- --no-default-features --features windows
+          npx tauri build -b nsis -c src-tauri/tauri.preview.windows.conf.json -- --no-default-features
 
       - name: Stage Windows artifacts
         shell: pwsh
