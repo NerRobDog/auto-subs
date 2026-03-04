@@ -164,7 +164,7 @@ function SettingsDropdown() {
           <DropdownMenuGroup>
             <DropdownMenuItem asChild className="cursor-pointer">
               <a
-                href="https://github.com/tmoroney/auto-subs"
+                href="https://github.com/NerRobDog/auto-subs"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group"
