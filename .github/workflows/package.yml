@@ -1,12 +1,33 @@
-name: Package AutoSubs for MacOS and Linux
+name: Package AutoSubs
 on:
   release:
-    types: [released]
+    types: [published]
   workflow_dispatch:
     inputs:
       tag:
         description: 'Release tag to build for'
         required: true
+        type: string
+      channel:
+        description: 'Release channel for manual runs'
+        required: false
+        default: auto
+        type: choice
+        options:
+          - auto
+          - experimental
+          - stable
+      stable_version:
+        description: 'Stable upstream version shown for experimental fork releases'
+        required: false
+        type: string
+      release_name:
+        description: 'Optional release title override'
+        required: false
+        type: string
+      release_notes:
+        description: 'Optional extra release notes appended to the generated body'
+        required: false
         type: string
 
 permissions:
@@ -17,7 +38,116 @@ env:
   TAG: ${{ github.event.release.tag_name || inputs.tag }}
 
 jobs:
+  prepare-release:
+    runs-on: ubuntu-latest
+    outputs:
+      build_version: ${{ steps.meta.outputs.build_version }}
+      stable_version: ${{ steps.meta.outputs.stable_version }}
+      release_name: ${{ steps.meta.outputs.release_name }}
+      release_notes: ${{ steps.meta.outputs.release_notes }}
+      prerelease: ${{ steps.meta.outputs.prerelease }}
+    steps:
+    - name: Ensure TAG is set
+      run: |
+        if [ -z "${TAG}" ]; then
+          echo "ERROR: TAG is empty. Trigger this workflow from a Release event or provide the 'tag' input when using workflow_dispatch."
+          exit 1
+        fi
+
+    - name: Compute release metadata
+      id: meta
+      env:
+        CHANNEL_INPUT: ${{ inputs.channel || '' }}
+        STABLE_VERSION_INPUT: ${{ inputs.stable_version || '' }}
+        CUSTOM_RELEASE_NAME: ${{ inputs.release_name || '' }}
+        EXTRA_RELEASE_NOTES: ${{ inputs.release_notes || '' }}
+        RELEASE_EVENT_NAME: ${{ github.event.release.name || '' }}
+        RELEASE_EVENT_BODY: ${{ github.event.release.body || '' }}
+        RELEASE_EVENT_PRERELEASE: ${{ github.event.release.prerelease && 'true' || 'false' }}
+        IS_FORK_REPO: ${{ github.repository != 'tmoroney/auto-subs' && 'true' || 'false' }}
+      run: |
+        set -euo pipefail
+
+        BUILD_VERSION="${TAG#v}"
+        BASE_VERSION="${BUILD_VERSION%%-*}"
+        STABLE_VERSION="${STABLE_VERSION_INPUT:-$BASE_VERSION}"
+
+        case "${CHANNEL_INPUT:-auto}" in
+          experimental)
+            PRERELEASE=true
+            ;;
+          stable)
+            PRERELEASE=false
+            ;;
+          auto|"")
+            if [ "${RELEASE_EVENT_PRERELEASE}" = "true" ]; then
+              PRERELEASE=true
+            elif [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ] && { [ "${IS_FORK_REPO}" = "true" ] || [ "${BUILD_VERSION}" != "${BASE_VERSION}" ]; }; then
+              PRERELEASE=true
+            else
+              PRERELEASE=false
+            fi
+            ;;
+          *)
+            echo "ERROR: Unsupported channel '${CHANNEL_INPUT}'"
+            exit 1
+            ;;
+        esac
+
+        if [ "${PRERELEASE}" = "true" ]; then
+          CHANNEL_LABEL="experimental"
+        else
+          CHANNEL_LABEL="stable"
+        fi
+
+        if [ -n "${CUSTOM_RELEASE_NAME}" ]; then
+          RELEASE_NAME="${CUSTOM_RELEASE_NAME}"
+        elif [ -n "${RELEASE_EVENT_NAME}" ]; then
+          RELEASE_NAME="${RELEASE_EVENT_NAME}"
+        elif [ "${CHANNEL_LABEL}" = "experimental" ]; then
+          RELEASE_NAME="AutoSubs Experimental ${BUILD_VERSION}"
+        else
+          RELEASE_NAME="AutoSubs ${BUILD_VERSION}"
+        fi
+
+        BODY="${RELEASE_EVENT_BODY}"
+        if [ -n "${BODY}" ]; then
+          BODY="${BODY}\n\n"
+        fi
+
+        if [ "${CHANNEL_LABEL}" = "experimental" ]; then
+          BODY="${BODY}Channel: experimental\nStable upstream: ${STABLE_VERSION}\nRepository: ${GITHUB_REPOSITORY}\n"
+        else
+          BODY="${BODY}Channel: stable\nRepository: ${GITHUB_REPOSITORY}\n"
+        fi
+
+        if [ -n "${EXTRA_RELEASE_NOTES}" ]; then
+          BODY="${BODY}\n${EXTRA_RELEASE_NOTES}\n"
+        fi
+
+        {
+          echo "build_version=${BUILD_VERSION}"
+          echo "stable_version=${STABLE_VERSION}"
+          echo "prerelease=${PRERELEASE}"
+          echo "release_name<<EOF"
+          echo "${RELEASE_NAME}"
+          echo "EOF"
+          echo "release_notes<<EOF"
+          printf '%b\n' "${BODY}"
+          echo "EOF"
+        } >> "${GITHUB_OUTPUT}"
+
+    - name: Create or update release
+      uses: softprops/action-gh-release@v2
+      with:
+        name: ${{ steps.meta.outputs.release_name }}
+        body: ${{ steps.meta.outputs.release_notes }}
+        prerelease: ${{ steps.meta.outputs.prerelease }}
+        tag_name: ${{ env.TAG }}
+        token: ${{ secrets.GH_TOKEN }}
+
   build-mac:
+    needs: prepare-release
     strategy:
       fail-fast: false
       matrix:
@@ -38,6 +168,13 @@ jobs:
     steps:
     - name: Checkout AutoSubs Repo Code
       uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: npm
+        cache-dependency-path: AutoSubs-App/package-lock.json
     
     - name: Ensure TAG is set
       run: |
@@ -45,6 +182,9 @@ jobs:
           echo "ERROR: TAG is empty. Trigger this workflow from a Release event or provide the 'tag' input when using workflow_dispatch."
           exit 1
         fi
+
+    - name: Stamp build version and updater endpoint
+      run: node .github/scripts/set-build-version.mjs "${{ needs.prepare-release.outputs.build_version }}" "${{ github.repository }}"
         
     - name: Use Xcode 16.4 (ARM only)
       if: matrix.arch == 'arm64'
@@ -177,10 +317,7 @@ jobs:
         chmod +x Mac-Package/Scripts/*
 
         # Create the package
-        # Resolve version from TAG (strip leading 'v' if present)
-        VERSION="${TAG}"
-        # Strip leading 'v' if present
-        VERSION=${VERSION#v}
+        VERSION="${{ needs.prepare-release.outputs.build_version }}"
 
         pkgbuild --identifier com.tom-moroney.autosubs \
           --version "$VERSION" \
@@ -258,11 +395,125 @@ jobs:
         token: ${{ secrets.GH_TOKEN }}
         tag_name: ${{ env.TAG }}
 
+  build-windows:
+    needs: prepare-release
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout AutoSubs Repo Code
+        uses: actions/checkout@v4
+
+      - name: Ensure TAG is set
+        shell: bash
+        run: |
+          if [ -z "${TAG}" ]; then
+            echo "ERROR: TAG is empty. Trigger this workflow from a Release event or provide the 'tag' input when using workflow_dispatch."
+            exit 1
+          fi
+
+      - name: Install Rust target helpers
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: AutoSubs-App/package-lock.json
+
+      - name: Stamp build version and updater endpoint
+        run: node .github/scripts/set-build-version.mjs "${{ needs.prepare-release.outputs.build_version }}" "${{ github.repository }}"
+
+      - name: Install NPM deps
+        working-directory: AutoSubs-App
+        run: npm install
+
+      - name: Download ffmpeg/ffprobe binaries (Windows)
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          Set-StrictMode -Version Latest
+          $ErrorActionPreference = "Stop"
+          Set-Location "AutoSubs-App/src-tauri"
+          New-Item -ItemType Directory -Force -Path "binaries" | Out-Null
+          Set-Location "binaries"
+
+          gh release download `
+            --repo tmoroney/ffmpeg-binaries `
+            --pattern "ffmpeg-x86_64-pc-windows-msvc.zip" `
+            --clobber
+
+          Expand-Archive -Path "ffmpeg-x86_64-pc-windows-msvc.zip" -DestinationPath "." -Force
+          Remove-Item "ffmpeg-x86_64-pc-windows-msvc.zip" -Force
+          Get-ChildItem
+
+      - name: Import Windows signing certificate
+        if: ${{ secrets.WINDOWS_CERTIFICATE_PFX != '' }}
+        shell: pwsh
+        env:
+          WINDOWS_CERTIFICATE_PFX: ${{ secrets.WINDOWS_CERTIFICATE_PFX }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $certPath = Join-Path $env:RUNNER_TEMP "windows-signing-cert.pfx"
+          [IO.File]::WriteAllBytes($certPath, [Convert]::FromBase64String($env:WINDOWS_CERTIFICATE_PFX))
+          $securePassword = ConvertTo-SecureString -String $env:WINDOWS_CERTIFICATE_PASSWORD -AsPlainText -Force
+          Import-PfxCertificate -FilePath $certPath -CertStoreLocation Cert:\CurrentUser\My -Password $securePassword | Out-Null
+
+      - name: Build Tauri (Windows x86_64)
+        working-directory: AutoSubs-App
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: npm run tauri build -- -- --no-default-features --features windows
+
+      - name: Collect Windows artifacts
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $bundleDir = "AutoSubs-App/src-tauri/target/release/bundle/nsis"
+          $outDir = "release-artifacts"
+          New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+
+          $installer = Get-ChildItem $bundleDir -Filter "*.exe" | Select-Object -First 1
+          if (-not $installer) {
+            throw "Windows installer not found in $bundleDir"
+          }
+
+          Copy-Item $installer.FullName (Join-Path $outDir "AutoSubs-windows-x86_64.exe")
+
+          $sigPath = "$($installer.FullName).sig"
+          if (-not (Test-Path $sigPath)) {
+            throw "Updater signature not found: $sigPath"
+          }
+
+          Copy-Item $sigPath (Join-Path $outDir "AutoSubs-windows-x86_64.exe.sig")
+
+      - name: Upload Windows artifacts to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release-artifacts/*
+          token: ${{ secrets.GH_TOKEN }}
+          tag_name: ${{ env.TAG }}
+
   build-linux:
+    needs: prepare-release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout AutoSubs Repo Code
         uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: AutoSubs-App/package-lock.json
+
+      - name: Stamp build version and updater endpoint
+        run: node .github/scripts/set-build-version.mjs "${{ needs.prepare-release.outputs.build_version }}" "${{ github.repository }}"
  
       - name: Install Vulkan SDK (for glslc)
         run: |
@@ -365,7 +616,7 @@ jobs:
           tag_name: ${{ env.TAG }}
 
   compose-latest-json:
-    needs: [build-mac]
+    needs: [prepare-release, build-mac, build-windows]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -379,6 +630,8 @@ jobs:
       - name: Compose latest.json with macOS and Windows artifacts
         env:
           TAG: ${{ env.TAG }}
+          BUILD_VERSION: ${{ needs.prepare-release.outputs.build_version }}
+          RELEASE_NOTES: ${{ needs.prepare-release.outputs.release_notes }}
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
@@ -412,9 +665,9 @@ jobs:
           INTEL_SIG="$(cat latest/AutoSubs-macos-x86_64.app.tar.gz.sig)"
           WINDOWS_SIG="$(cat latest/AutoSubs-windows-x86_64.exe.sig 2>/dev/null || true)"
 
-          VERSION="${TAG#v}"
+          VERSION="${BUILD_VERSION}"
           PUB_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-          NOTES='${{ github.event.release.name }}'
+          NOTES="${RELEASE_NOTES}"
 
           JSON_OUTPUT=$(jq -n \
             --arg version "$VERSION" \

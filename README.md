@@ -10,7 +10,7 @@ Create high‑quality subtitles with **one click**. AutoSubs delivers **fast, ac
 
 **💡 800,000+ downloads so far!**
 
-<a href="https://www.buymeacoffee.com/tmoroney" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+[❤️ Support AutoSubs on Tribute](https://web.tribute.tg/d/AZB)
 
 ## 🚀 What’s New in V3
 - **New, cleaner UI** — Easier to use and more consistent.

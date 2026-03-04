@@ -178,7 +178,7 @@ function SettingsDropdown() {
               className="cursor-pointer focus:bg-pink-100 focus:text-pink-700 data-[highlighted]:bg-pink-100 data-[highlighted]:text-pink-700 dark:focus:bg-pink-900/50 dark:focus:text-pink-500 dark:data-[highlighted]:bg-pink-900/50 dark:data-[highlighted]:text-pink-500"
             >
               <a
-                href="https://buymeacoffee.com/tmoroney"
+                href="https://web.tribute.tg/d/AZB"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative flex w-full items-center"
