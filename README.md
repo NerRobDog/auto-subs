@@ -4,9 +4,9 @@ Create high‑quality subtitles with **one click**. AutoSubs delivers **fast, ac
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/tmoroney/auto-subs)
 
-### 📥 One‑Click Installer: [Windows](https://github.com/tmoroney/auto-subs/releases/latest/download/AutoSubs-windows-x86_64.exe) ✨ [macOS (Apple Silicon)](https://github.com/tmoroney/auto-subs/releases/latest/download/AutoSubs-Mac-ARM.pkg) ✨ [macOS (Intel)](https://github.com/tmoroney/auto-subs/releases/latest/download/AutoSubs-Mac-Intel.pkg)
+### 📥 Installer downloads will be added back for stable releases.
 
-### 🐧 [Linux (.deb): see install commands below](#quick-start)
+### 🐧 Linux install instructions will be added back with the stable release links.
 
 **💡 800,000+ downloads so far!**
 
@@ -35,17 +35,7 @@ Generate Subtitles & Label Speakers |  Advanced Settings
 ## Quick Start
 ### 1) Download & Install
 
-**🪟 Windows + 🍎 macOS:** 
-Download the installer for your platform from the links above and follow the prompts.
-
-**🐧 Linux (.deb):**
-Download and install the latest release with:
-```bash
-wget https://github.com/tmoroney/auto-subs/releases/latest/download/AutoSubs-linux-x86_64.deb
-sudo apt install ./AutoSubs-linux-x86_64.deb
-# If you see dependency errors, run:
-sudo dpkg -i AutoSubs-linux-x86_64.deb && sudo apt -f install
-```
+Installer links are temporarily hidden until the stable release assets are published for this fork.
 
 ### 2) Choose a Workflow
 #### Standalone Mode (no Resolve required)
