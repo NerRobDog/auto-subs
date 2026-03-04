@@ -2,7 +2,7 @@
 
 Create high‑quality subtitles with **one click**. AutoSubs delivers **fast, accurate, and fully customisable** subtitles in a sleek, intuitive interface. Now works with Davinci Resolve and standalone.
 
-[Project Wiki](https://github.com/NerRobDog/auto-subs/wiki)
+[Project Wiki](Docs/wiki/Home.md)
 
 ### 📥 Installer downloads will be added back for stable releases.
 
