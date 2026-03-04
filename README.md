@@ -35,7 +35,7 @@ Generate Subtitles & Label Speakers |  Advanced Settings
 ## Quick Start
 ### 1) Download & Install
 
-Installer links are temporarily hidden until the stable release assets are published for this fork.
+Installer links are temporarily hidden until the stable release assets are published for this repository.
 
 ### 2) Choose a Workflow
 #### Standalone Mode (no Resolve required)
