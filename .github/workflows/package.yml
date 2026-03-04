@@ -398,6 +398,8 @@ jobs:
   build-windows:
     needs: prepare-release
     runs-on: windows-latest
+    env:
+      HAS_WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE_PFX != '' && 'true' || 'false' }}
 
     steps:
       - name: Checkout AutoSubs Repo Code
@@ -449,7 +451,7 @@ jobs:
           Get-ChildItem
 
       - name: Import Windows signing certificate
-        if: ${{ secrets.WINDOWS_CERTIFICATE_PFX != '' }}
+        if: env.HAS_WINDOWS_CERTIFICATE == 'true'
         shell: pwsh
         env:
           WINDOWS_CERTIFICATE_PFX: ${{ secrets.WINDOWS_CERTIFICATE_PFX }}
