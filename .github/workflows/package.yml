@@ -144,7 +144,7 @@ jobs:
         body: ${{ steps.meta.outputs.release_notes }}
         prerelease: ${{ steps.meta.outputs.prerelease }}
         tag_name: ${{ env.TAG }}
-        token: ${{ secrets.GH_TOKEN }}
+        token: ${{ github.token }}
 
   build-mac:
     needs: prepare-release
@@ -252,7 +252,7 @@ jobs:
 
     - name: Download ffmpeg/ffprobe binaries
       env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        GH_TOKEN: ${{ github.token }}
       run: |
         set -euo pipefail
         cd AutoSubs-App/src-tauri
@@ -392,7 +392,7 @@ jobs:
         files: |
           AutoSubs-Mac-${{ matrix.pkg_suffix }}.pkg
           release-artifacts/*
-        token: ${{ secrets.GH_TOKEN }}
+        token: ${{ github.token }}
         tag_name: ${{ env.TAG }}
 
   build-windows:
@@ -433,7 +433,7 @@ jobs:
       - name: Download ffmpeg/ffprobe binaries (Windows)
         shell: pwsh
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           Set-StrictMode -Version Latest
           $ErrorActionPreference = "Stop"
@@ -497,7 +497,7 @@ jobs:
         with:
           files: |
             release-artifacts/*
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ github.token }}
           tag_name: ${{ env.TAG }}
 
   build-linux:
@@ -563,7 +563,7 @@ jobs:
 
       - name: Download ffmpeg/ffprobe binaries (Linux)
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           cd AutoSubs-App/src-tauri
@@ -614,7 +614,7 @@ jobs:
         with:
           files: |
             *.deb
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ github.token }}
           tag_name: ${{ env.TAG }}
 
   compose-latest-json:
@@ -634,8 +634,8 @@ jobs:
           TAG: ${{ env.TAG }}
           BUILD_VERSION: ${{ needs.prepare-release.outputs.build_version }}
           RELEASE_NOTES: ${{ needs.prepare-release.outputs.release_notes }}
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           if [ -z "${TAG}" ]; then
@@ -706,5 +706,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: latest.json
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ github.token }}
           tag_name: ${{ env.TAG }}
